@@ -2,20 +2,23 @@
 #include<math.h>
 #include<windows.h>
 
-#define WIDTH 96 				// width in characters
-#define HEIGHT 64 				// height in characters
-#define PIXELDISTANCE 0.03 		// FOV
-#define MAXMARCHES 100 			// maximum number of steps a ray can take
-#define MAXDISTANCE 150 		// maximum distance a ray can travel
-#define DISTANCETHRESHOLD 0.01	// distance from surface to stop a ray
+#define WIDTH 96 // width in characters
+#define HEIGHT 64 // height in characters
+#define PIXELDISTANCE 0.03 // FOV
+#define MAXMARCHES 100 // maximum number of steps a ray can take
+#define MAXDISTANCE 150 // maximum distance a ray can travel
+#define DISTANCETHRESHOLD 0.01 // distance from surface to stop a ray
 
 struct bodyData {
-	int shapeType; 		// 0 - sphere, 1 - cube
-	int color; 			// windows terminal color code
-	float position[3];	// from the camera perspective: -x = right, -y = forward, +z = up
+	int shapeType; // 0 - sphere, 1 - cube
+	int color; // windows terminal color code
+	float position[3]; // from the camera perspective: -x = right, -y = forward, +z = up
 	float radius;		
 };
+// This array of structs describes all of the bodies in a scene. The format is described above this line.
+// The first element is always the point light source that is used for shading!
 struct bodyData bodies[] = { {0,15,{10,10,30},1}, {0,15,{0,0,-2000},1995}, {0,9,{0,0,0},5}, {1,10,{-10,-2,3},3}, {1,12,{12,0,3},3}, {1,13,{-9,5,-1},2} };
+// struct bodyData bodies[] = { {0,15,{10,10,30},1}, {0,15,{0,0,-2000},1995}};
 // struct bodyData bodies[] = { {0,15,{-500,100,500},1}, {0,10,{0,0,-11000},10995}, {1,15,{-17,0,-4},1}, {1,15,{-17,0,-2},1}, {1,15,{-17,0,0},1}, {1,15,{-17,0,2},1}, {1,15,{8,5,-4},1}, {1,15,{8,5,-2},1}, {1,15,{8,5,0},1}, {1,15,{8,5,2},1}, {0,10,{8,5,6},4}, {0,10,{-17,0,6},4}, {0,12,{5,-7,-4},2.5}, {0,12,{-13,4,-4},2.5}, {0,12,{18,-2,-4},2.5}, {0,12,{-13,-20,-4},2}, {1,14,{-80,-90,45},50}, {1,14,{80,-51,45},50} };
 
 typedef struct rayData {
@@ -140,7 +143,7 @@ float calculateDistance(float* position, int bodyIndex) {
 			return sqrt(pow(position[0] - bodies[bodyIndex].position[0], 2)
 			 + pow(position[1] - bodies[bodyIndex].position[1], 2)
 			 + pow(position[2] - bodies[bodyIndex].position[2], 2)) - bodies[bodyIndex].radius;
-		case 1: // Cube SDF by Inigo Quilez
+		case 1: // Box SDF by Inigo Quilez (https://iquilezles.org/articles/distfunctions/)
 			vectorSubtract(bodies[bodyIndex].position, position, temp,3);
 			temp[0] = fabsf(temp[0]) - bodies[bodyIndex].radius;
 			temp[1] = fabsf(temp[1]) - bodies[bodyIndex].radius;
