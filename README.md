@@ -5,6 +5,6 @@ This is my first program than can render a 3D scene. I made it for fun and to le
 
 # Screenshots
 
-![output_3](/screenshots/output_3.png)
+![output_2](/screenshots/output_2.png)
 
 ![output_4](/screenshots/output_4.png)
